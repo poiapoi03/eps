@@ -2,7 +2,7 @@
 use yii\helpers\Url;
 ?>
 <p>Dear <?= $model->project->client->client_name .' / ' . $model->project->client->company_name?>, <br>
-1
+
 <br />Please click the following link to download your Billing Statement Notice for project title :<?= $model->project->project_title ?>.</p>
 <p><?= Url::base(true);  ?> <br>
 
