@@ -2,7 +2,7 @@
 
 use yii\helpers\Url;
 
-$this->title = 'App-Template';
+$this->title = 'Welcome to Fortbuilders ePayment System! (v1 BETA VERSION)';
 
 ?>
 
