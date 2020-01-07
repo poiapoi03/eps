@@ -115,7 +115,7 @@ class ProjectList extends \yii\db\ActiveRecord
     public function computeProgress($pid)
     {
         $result = 0.0000;
-        $data = \app\models\BillingList::find()->where(['project_list_id'=>$pid])->all();
+        $data = \app\models\BillingList::find()->where(['project_list_id'=>$pid,'bill_status_id'=>[2,3]])->all();
         foreach($data as $row)
         {
             $result += $row->progress_percent;

@@ -40,6 +40,8 @@ CrudAsset::register($this);
     ]) ?>
 
 </div>
+<?= \yii\helpers\Html::a('<i class="fa fa-arrow-left fa-fw"></i>Back', ['/billing-list','pid'=>$model->project->guid],['class'=>'btn btn-danger pull-right']); ?>
+<div class="clearfix"></div><br>
 
 <div class="billing-details-index">
     <div id="ajaxCrudDatatable">

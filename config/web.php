@@ -4,8 +4,8 @@ $params = require __DIR__ . '/params.php';
 $db = require __DIR__ . '/db.php';
 
 $config = [
-    'id' => 'Fortbuilders ePayment System',
-    'name'=>'Fortbuilders ePayment System',
+    'id' => 'Fortbuilders Payment System',
+    'name'=>'Fortbuilders Payment System',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
     'aliases' => [

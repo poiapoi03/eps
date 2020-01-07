@@ -19,7 +19,9 @@ yidas\adminlte\plugins\iCheckAsset::register($this);
     <?php $this->head() ?>
 </head>
 <body class="hold-transition login-page">
-
+<div align="center">
+<img src="<?= Yii::getAlias('@web') ?>/images/fb_header.png" alt="Image" height="150px"><br><br>
+</div>
 <?php $this->beginBody() ?>
 
     <?= $content ?>

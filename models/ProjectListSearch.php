@@ -79,4 +79,44 @@ class ProjectListSearch extends ProjectList
 
         return $dataProvider;
     }
+
+    public function searchByClient($params, $cid)
+    {
+        $query = ProjectList::find();
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+        ]);
+
+        $this->load($params);
+
+        if (!$this->validate()) {
+            // uncomment the following line if you do not want to return any records when validation fails
+            // $query->where('0=1');
+            return $dataProvider;
+        }
+
+        $query->andFilterWhere([
+            'id' => $this->id,
+            'client_list_id' => $cid,
+            'contract_price' => $this->contract_price,
+            'deposit_amount' => $this->deposit_amount,
+            'retention_amount' => $this->retention_amount,
+            'start_date' => $this->start_date,
+            'end_date' => $this->end_date,
+            'created_by' => $this->created_by,
+            'created_date' => $this->created_date,
+            'updated_by' => $this->updated_by,
+            'updated_date' => $this->updated_date,
+        ]);
+
+        $query->andFilterWhere(['like', 'guid', $this->guid])
+            ->andFilterWhere(['like', 'project_title', $this->project_title])
+            ->andFilterWhere(['like', 'deposit_percent', $this->deposit_percent])
+            ->andFilterWhere(['like', 'retention_percent', $this->retention_percent])
+            ->andFilterWhere(['like', 'project_ref_id', $this->project_ref_id])
+            ->andFilterWhere(['like', 'is_active', $this->is_active]);
+
+        return $dataProvider;
+    }
 }

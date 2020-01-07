@@ -1,65 +1,65 @@
 <?php
+use yii\widgets\DetailView;
 use yii\helpers\Url;
 use yii\helpers\Html;
 use yii\bootstrap\Modal;
 use kartik\grid\GridView;
 use johnitvn\ajaxcrud\CrudAsset; 
 use johnitvn\ajaxcrud\BulkButtonWidget;
-
-use yii\widgets\DetailView;
-
 /* @var $this yii\web\View */
-/* @var $searchModel app\models\BillingListSearch */
-/* @var $dataProvider yii\data\ActiveDataProvider */
-
-$this->title = 'Project Billing List -' . $model->project_ref_id;
-$this->params['breadcrumbs'][] = $this->title;
+/* @var $model app\models\ClientList */
 
 CrudAsset::register($this);
 
-?>
+$this->title = 'My Profile';
+$this->params['breadcrumbs'][] = $this->title;
 
-<div class="project-list-view">
- 
-    <?= DetailView::widget([
-        'model' => $model,
-        'attributes' => [
-            #'id',
-            #'guid',
-            [                     
-                'label' => 'Client',
-                'value' => $model->client->company_name . '<br>' .$model->client->client_name,
-                'format'=>'html'
+?>
+<div class="client-list-view">
+
+    
+    <div class="col-md-6 col-lg-6">
+        <?= DetailView::widget([
+            'model' => Yii::$app->user->identity->client,
+            'attributes' => [
+                'client_name',
+                'company_name',
+                'address',
             ],
-            'project_title:ntext',
-            [                      
-                'label' => 'Contract Price',
-                'value' => $model->contract_price,
-                'format'=>['decimal',2]
+        ]) ?>
+    </div>
+    
+    <div class="col-md-6 col-lg-6">
+        <?= DetailView::widget([
+            'model' => Yii::$app->user->identity->client,
+            'attributes' => [
+                'email:ntext',
+                'contact_no:ntext',
+                'client_ref_id',
+                
             ],
-        
-        ],
-    ]) ?>
+        ]) ?>
+    </div>
+    
+    <div class="clearfix">
+    
+    </div>
+
 
 </div>
 
-<?= \yii\helpers\Html::a('<i class="fa fa-arrow-left fa-fw"></i>Back', '/project-list',['class'=>'btn btn-danger pull-right']); ?>
-<div class="clearfix"></div><br>
-
-<div class="billing-list-index">
+<div class="client-list-index">
     <div id="ajaxCrudDatatable">
         <?=GridView::widget([
             'id'=>'crud-datatable',
             'dataProvider' => $dataProvider,
-            'filterModel' => $searchModel,
+            // 'filterModel' => $searchModel,
             'pjax'=>true,
             'columns' => require(__DIR__.'/_columns.php'),
-            'showPageSummary' => true,
-            
             'toolbar'=> [
-                ['content'=>
-                    Html::a('<i class="glyphicon glyphicon-plus"></i>Create Billing', ['create','pid'=>$model->guid],
-                    ['role'=>'modal-remote','title'=> 'Create new Billing Lists','class'=>'btn btn-primary'])
+                ['content'=>'',
+                    // Html::a('<i class="glyphicon glyphicon-plus"></i> Add Client', ['create'],
+                    // ['role'=>'modal-remote','title'=> 'Add new Client','class'=>'btn btn-primary'])
                     // .
                     // Html::a('<i class="glyphicon glyphicon-repeat"></i>', [''],
                     // ['data-pjax'=>1, 'class'=>'btn btn-default', 'title'=>'Reset Grid']).
@@ -96,3 +96,4 @@ CrudAsset::register($this);
     "footer"=>"",// always need it for jquery plugin
 ])?>
 <?php Modal::end(); ?>
+

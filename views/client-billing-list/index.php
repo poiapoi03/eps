@@ -26,11 +26,11 @@ CrudAsset::register($this);
         'attributes' => [
             #'id',
             #'guid',
-            [                     
-                'label' => 'Client',
-                'value' => $model->client->company_name . '<br>' .$model->client->client_name,
-                'format'=>'html'
-            ],
+            // [                     
+            //     'label' => 'Client',
+            //     'value' => $model->client->company_name . '<br>' .$model->client->client_name,
+            //     'format'=>'html'
+            // ],
             'project_title:ntext',
             [                      
                 'label' => 'Contract Price',
@@ -42,24 +42,24 @@ CrudAsset::register($this);
     ]) ?>
 
 </div>
-
-<?= \yii\helpers\Html::a('<i class="fa fa-arrow-left fa-fw"></i>Back', '/project-list',['class'=>'btn btn-danger pull-right']); ?>
+<?= \yii\helpers\Html::a('<i class="fa fa-arrow-left fa-fw"></i>Back', Yii::$app->request->referrer,['class'=>'btn btn-danger pull-right']); ?>
 <div class="clearfix"></div><br>
+
 
 <div class="billing-list-index">
     <div id="ajaxCrudDatatable">
         <?=GridView::widget([
             'id'=>'crud-datatable',
             'dataProvider' => $dataProvider,
-            'filterModel' => $searchModel,
+           // 'filterModel' => $searchModel,
             'pjax'=>true,
             'columns' => require(__DIR__.'/_columns.php'),
             'showPageSummary' => true,
             
             'toolbar'=> [
-                ['content'=>
-                    Html::a('<i class="glyphicon glyphicon-plus"></i>Create Billing', ['create','pid'=>$model->guid],
-                    ['role'=>'modal-remote','title'=> 'Create new Billing Lists','class'=>'btn btn-primary'])
+                ['content'=>'',
+                    // Html::a('<i class="glyphicon glyphicon-plus"></i>Create Billing', ['create','pid'=>$model->guid],
+                    // ['role'=>'modal-remote','title'=> 'Create new Billing Lists','class'=>'btn btn-primary'])
                     // .
                     // Html::a('<i class="glyphicon glyphicon-repeat"></i>', [''],
                     // ['data-pjax'=>1, 'class'=>'btn btn-default', 'title'=>'Reset Grid']).

@@ -30,6 +30,10 @@ class User extends BaseUser
     //     ],
     // ];
 
+    public function getClient()
+    {
+        return $this->hasOne(ClientList::className(), ['id' => 'client_list_id']);  
+    }
 
     /**
      * {@inheritdoc}

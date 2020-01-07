@@ -5,14 +5,12 @@ use yii\bootstrap\Modal;
 use kartik\grid\GridView;
 use johnitvn\ajaxcrud\CrudAsset; 
 use johnitvn\ajaxcrud\BulkButtonWidget;
-
 use yii\widgets\DetailView;
-
 /* @var $this yii\web\View */
-/* @var $searchModel app\models\BillingListSearch */
+/* @var $searchModel app\models\BillingDetailsSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Project Billing List -' . $model->project_ref_id;
+$this->title = 'Billing Details for Statement #' . $model->billing_no;
 $this->params['breadcrumbs'][] = $this->title;
 
 CrudAsset::register($this);
@@ -21,45 +19,42 @@ CrudAsset::register($this);
 
 <div class="project-list-view">
  
-    <?= DetailView::widget([
+    <!-- <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
             #'id',
             #'guid',
             [                     
                 'label' => 'Client',
-                'value' => $model->client->company_name . '<br>' .$model->client->client_name,
+                'value' => $model->project->client->company_name . '<br>' .$model->project->client->client_name,
                 'format'=>'html'
             ],
-            'project_title:ntext',
+             'project.project_title:ntext',
             [                      
                 'label' => 'Contract Price',
-                'value' => $model->contract_price,
+                'value' => $model->project->contract_price,
                 'format'=>['decimal',2]
             ],
         
         ],
-    ]) ?>
+    ]) ?> -->
 
 </div>
 
-<?= \yii\helpers\Html::a('<i class="fa fa-arrow-left fa-fw"></i>Back', '/project-list',['class'=>'btn btn-danger pull-right']); ?>
-<div class="clearfix"></div><br>
+<?= \yii\helpers\Html::a( 'Back', Yii::$app->request->referrer); ?>
 
-<div class="billing-list-index">
+<div class="billing-details-index">
     <div id="ajaxCrudDatatable">
         <?=GridView::widget([
             'id'=>'crud-datatable',
             'dataProvider' => $dataProvider,
-            'filterModel' => $searchModel,
+           // 'filterModel' => $searchModel,
             'pjax'=>true,
             'columns' => require(__DIR__.'/_columns.php'),
-            'showPageSummary' => true,
-            
             'toolbar'=> [
-                ['content'=>
-                    Html::a('<i class="glyphicon glyphicon-plus"></i>Create Billing', ['create','pid'=>$model->guid],
-                    ['role'=>'modal-remote','title'=> 'Create new Billing Lists','class'=>'btn btn-primary'])
+                ['content'=>'',
+                    // Html::a('<i class="glyphicon glyphicon-plus"></i> Add Other Billing Details', ['create','blid'=>$model->guid],
+                    // ['role'=>'modal-remote','title'=> 'Create new Billing Details','class'=>'btn btn-primary'])
                     // .
                     // Html::a('<i class="glyphicon glyphicon-repeat"></i>', [''],
                     // ['data-pjax'=>1, 'class'=>'btn btn-default', 'title'=>'Reset Grid']).
@@ -73,7 +68,7 @@ CrudAsset::register($this);
             'panel' => [
                 'type' => 'primary', 
                 'heading' => '<i class="glyphicon glyphicon-list"></i>',
-                // 'before'=>'<em>* Resize table columns just like a spreadsheet by dragging the column edges.</em>',
+                'after'=>'<h3>Total Amount Due: ' . number_format($model->computeDueAmount($model->id),2) .'</h3>',
                 // 'after'=>BulkButtonWidget::widget([
                 //             'buttons'=>Html::a('<i class="glyphicon glyphicon-trash"></i>&nbsp; Delete All',
                 //                 ["bulk-delete"] ,
