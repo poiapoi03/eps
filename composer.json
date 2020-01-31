@@ -22,7 +22,9 @@
         "kartik-v/yii2-dialog": "dev-master",
         "kartik-v/yii2-number": "dev-master",
         "ramsey/uuid": "^3.9",
-        "2amigos/qrcode-library": "~1.1"
+        "2amigos/qrcode-library": "~1.1",
+        "crazymeeks/dragonpay": "^3.2",
+        "coreproc/dragonpay-sdk": "^2.0"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.0",

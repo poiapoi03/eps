@@ -9,6 +9,13 @@ use yii\web\Response;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\ContactForm;
+use Crazymeeks\Foundation\PaymentGateway\Dragonpay;
+use Crazymeeks\Foundation\PaymentGateway\Dragonpay\Token;
+use Crazymeeks\Foundation\PaymentGateway\Options\Processor;
+
+
+use Coreproc\Dragonpay\DragonpayClient;
+use Coreproc\Dragonpay\Checkout;
 
 class SiteController extends Controller
 {
@@ -140,5 +147,55 @@ class SiteController extends Controller
     public function actionAbout()
     {
         return $this->render('about');
+    }
+
+    public function actionTestPay()
+    {
+        $parameters = [
+            'txnid' => rand(1,99999), # Varchar(40) A unique id identifying this specific transaction from the merchant site
+            'amount' => 1, # Numeric(12,2) The amount to get from the end-user (XXXX.XX)
+            'ccy' => 'PHP', # Char(3) The currency of the amount
+            'description' => 'Test', # Varchar(128) A brief description of what the payment is for
+            'email' => 'some@merchant.ph', # Varchar(40) email address of customer
+            'param1' => 'param1', # Varchar(80) [OPTIONAL] value that will be posted back to the merchant url when completed
+            'param2' => 'param2', # Varchar(80) [OPTIONAL] value that will be posted back to the merchant url when completed
+
+        ];
+
+
+        $merchant_account = [
+              'merchantid' => 'FORTBUILDERS',
+              'password'   => 'Anv31af7q8y6JCj'
+        ];
+        // Initialize Dragonpay
+        $dragonpay = new Dragonpay($merchant_account);
+        // Set parameters, then redirect to dragonpay
+        $dragonpay->setParameters($parameters)
+                    // ->withProcid(Processor::GCASH)
+                    ->away();
+    }
+
+    public function actionTestPayTwo()
+    {
+        $credentials = [
+            'merchantId'        => 'FORTBUILDERS',
+            'merchantPassword'  => 'Anv31af7q8y6JCj',
+        ];
+        
+        $client = new DragonpayClient($credentials);
+        
+        $checkout = new Checkout($client);
+        
+        $params = [
+            'transactionId' => rand(1000,9999),
+            'amount'        => '1.00',
+            'currency'      => 'PHP',
+            'description'   => 'Playstation 4',
+            'email'         => 'john@example.com',
+        ];
+        
+        $url = $checkout->getUrl($params);
+        
+        $checkout->redirect($params);
     }
 }
