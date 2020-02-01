@@ -130,11 +130,13 @@ class BillingListController extends Controller
         $request = Yii::$app->request;
         $model = new BillingList();
         $model->project_list_id = $project->id;  
+        
 
         $bill_count = \app\models\BillingList::find()->where(['project_list_id'=>$project->id, 'is_active'=>1])->count();
 
         $model->billing_no = $bill_count + 1;
         $model->billing_date = date('Y-m-d');
+        $model->bs_ref_no = $project->project_ref_id .'-BS'. sprintf('%02d', $model->billing_no);
 
         $sysSettings = \app\models\SystemSettings::findOne(1);
 

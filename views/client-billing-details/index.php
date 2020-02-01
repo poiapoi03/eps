@@ -67,7 +67,7 @@ CrudAsset::register($this);
             'responsive' => true,          
             'panel' => [
                 'type' => 'primary', 
-                'heading' => '<i class="glyphicon glyphicon-list"></i>',
+                'heading' => '<i class="glyphicon glyphicon-list"></i> Billing Statements',
                 'after'=>'<h3>Total Amount Due: ' . number_format($model->computeDueAmount($model->id),2) .'</h3>',
                 // 'after'=>BulkButtonWidget::widget([
                 //             'buttons'=>Html::a('<i class="glyphicon glyphicon-trash"></i>&nbsp; Delete All',

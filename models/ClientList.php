@@ -34,14 +34,18 @@ class ClientList extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['client_name','address','contact_no'], 'required'],
-            [['contact_no','address'], 'string'],
-            [['email'], 'email'],
-            [['created_by', 'updated_by'], 'integer'],
-            [['created_date', 'updated_date','is_active'], 'safe'],
-            [['client_name'], 'string', 'max' => 100],
-            [['company_name'], 'string', 'max' => 200],
+            [['address','contact_no','first_name','last_name','email','contact_no','address','address2','city','province','country'], 'required'],
+            [['client_name','address','first_name','last_name','name_prefix','middle_name','company_name','ext_name','address','address2','city','province'], 'filter', 'filter'=>'strtoupper'],
+            [['contact_no', 'address', 'address2'], 'string'],
+            [['created_by', 'updated_by', 'is_active'], 'integer'],
+            [['created_date', 'updated_date'], 'safe'],
+            [['guid'], 'string', 'max' => 36],
+            [['client_name', 'email', 'city', 'province'], 'string', 'max' => 100],
+            [['company_name', 'last_name', 'first_name', 'middle_name'], 'string', 'max' => 200],
+            [['country', 'zipCode', 'ext_name'], 'string', 'max' => 10],
             [['client_ref_id'], 'string', 'max' => 45],
+            [['name_prefix'], 'string', 'max' => 20],
+            ['email','email'],
         ];
     }
 
@@ -55,12 +59,23 @@ class ClientList extends \yii\db\ActiveRecord
             'client_name' => 'Client Name',
             'company_name' => 'Client Company Name',
             'contact_no' => 'Contact Number/s',
-            'address' => 'Address',
+            'address' => 'Address 1',
+            'address2' => 'Address 2',
+            'city' => 'City',
+            'province' => 'Province',
+            'country' => 'Country',
+            'zipCode' => 'Zip Code',
             'client_ref_id' => 'Client Ref ID',
             'created_by' => 'Created By',
             'created_date' => 'Created Date',
             'updated_by' => 'Updated By',
             'updated_date' => 'Updated Date',
+            'is_active' => 'Is Active',
+            'name_prefix' => 'Name Prefix',
+            'last_name' => 'Last Name',
+            'first_name' => 'First Name',
+            'middle_name' => 'Middle Name',
+            'ext_name' => 'Extension Name',
         ];
     }
 
@@ -73,11 +88,20 @@ class ClientList extends \yii\db\ActiveRecord
             $this->created_by = Yii::$app->user->id;
             $this->created_date = date('Y-m-d');
             $this->guid = Uuid::uuid4();
+            
             $series = \app\models\Series::findOne(1);
             $series->series = sprintf('%04d', $series->series  + 1);
             $this->client_ref_id = "FBCDC-CID-". date('Y') . '-' . $series->series;
             $series->save(false);
         }
+
+        //set client_name
+        $prefix = $this->name_prefix != '' ? $this->name_prefix . ' ' : '';
+        $mname =  $this->middle_name != '' ? $this->middle_name . ' ' : '';
+        $extname = $this->ext_name != '' ? ' '. $this->ext_name  : '';
+
+        $this->client_name = strtoupper($prefix . $this->first_name . ' ' . $mname . $this->last_name . $extname);
+
         $this->updated_by = Yii::$app->user->id;
         $this->updated_date = date('Y-m-d');
 
@@ -92,5 +116,10 @@ class ClientList extends \yii\db\ActiveRecord
     public function getUpdatedByUser()
     {
         return $this->hasOne(User::className(), ['id' => 'updated_by']);
+    }
+
+    public function getCompleteAddress()
+    {
+        return $this->address . ' ' . $this->address2 . ' ' . $this->city . ' ' . $this->province . ' '. $this->zipCode;
     }
 }

@@ -107,7 +107,8 @@ class ClientListController extends Controller
             Yii::$app->response->format = Response::FORMAT_JSON;
             if($request->isGet){
                 return [
-                    'title'=> "Create new ClientList",
+                    'title'=> "Add Client",
+                    'size'=>'large',
                     'content'=>$this->renderAjax('create', [
                         'model' => $model,
                     ]),
@@ -118,7 +119,8 @@ class ClientListController extends Controller
             }else if($model->load($request->post()) && $model->save()){
                 return [
                     'forceReload'=>'#crud-datatable-pjax',
-                    'title'=> "Create new ClientList",
+                    'title'=> "Add Client",
+                    'size'=>'large',
                     'content'=>'<span class="text-success">Create ClientList success</span>',
                     'footer'=> Html::button('Close',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
                             Html::a('Create More',['create'],['class'=>'btn btn-primary','role'=>'modal-remote'])
@@ -126,7 +128,8 @@ class ClientListController extends Controller
                 ];         
             }else{           
                 return [
-                    'title'=> "Create new ClientList",
+                    'title'=> "Add Client",
+                    'size'=>'large',
                     'content'=>$this->renderAjax('create', [
                         'model' => $model,
                     ]),
@@ -169,7 +172,8 @@ class ClientListController extends Controller
             Yii::$app->response->format = Response::FORMAT_JSON;
             if($request->isGet){
                 return [
-                    'title'=> "Update ClientList #".$model->client_ref_id,
+                    'title'=> "Update Client",
+                    'size'=>'large',
                     'content'=>$this->renderAjax('update', [
                         'model' => $model,
                     ]),
@@ -179,7 +183,8 @@ class ClientListController extends Controller
             }else if($model->load($request->post()) && $model->save()){
                 return [
                     'forceReload'=>'#crud-datatable-pjax',
-                    'title'=> "ClientList #".$model->client_ref_id,
+                    'title'=>  "Update Client",
+                    'size'=>'large',
                     'content'=>$this->renderAjax('view', [
                         'model' => $model,
                     ]),
@@ -188,7 +193,8 @@ class ClientListController extends Controller
                 ];    
             }else{
                  return [
-                    'title'=> "Update ClientList #".$model->client_ref_id,
+                    'title'=>  "Update Client",
+                    'size'=>'large',
                     'content'=>$this->renderAjax('update', [
                         'model' => $model,
                     ]),

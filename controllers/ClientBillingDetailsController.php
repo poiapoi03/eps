@@ -11,6 +11,7 @@ use yii\filters\VerbFilter;
 use \yii\web\Response;
 use yii\helpers\Html;
 
+
 /**
  * BillingDetailsController implements the CRUD actions for BillingDetails model.
  */
@@ -31,6 +32,8 @@ class ClientBillingDetailsController extends Controller
             ],
         ];
     }
+
+
 
     /**
      * Lists all BillingDetails models.

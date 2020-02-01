@@ -11,6 +11,9 @@ use yii\filters\VerbFilter;
 use \yii\web\Response;
 use yii\helpers\Html;
 use kartik\mpdf\Pdf;
+use Crazymeeks\Foundation\PaymentGateway\Dragonpay;
+use Crazymeeks\Foundation\PaymentGateway\Options\Processor;
+
 /**
  * BillingListController implements the CRUD actions for BillingList model.
  */
@@ -30,6 +33,52 @@ class ClientBillingListController extends Controller
                 ],
             ],
         ];
+    }
+
+    public function actionOnlinePayment($guid)
+    {
+        $model = \app\models\BillingList::findOne(['guid'=>$guid]);
+
+        $parameters = [
+            //'txnid' => rand(1,9999), # Varchar(40) A unique id identifying this specific transaction from the merchant site
+            'txnid' => 'FB-BS-'.rand(10000,99999), # Varchar(40) A unique id identifying this specific transaction from the merchant site
+            // 'amount' => $model->computeDueAmount($model->id), # Numeric(12,2) The amount to get from the end-user (XXXX.XX)
+            'amount' => 1, # Numeric(12,2) The amount to get from the end-user (XXXX.XX)
+            'ccy' => 'PHP', # Char(3) The currency of the amount
+            'description' => 'PROGRESS BILLING No. ' . $model->billing_no, # Varchar(128) A brief description of what the payment is for
+            'email' => $model->project->client->email, # Varchar(40) email address of customer
+            'param1' =>$model->bs_ref_no, # Varchar(80) [OPTIONAL] value that will be posted back to the merchant url when completed
+            'param2' =>$model->project->project_ref_id, # Varchar(80) [OPTIONAL] value that will be posted back to the merchant url when completed
+
+        ];
+
+
+        $merchant_account = [
+              'merchantid' => 'FORTBUILDERS',
+              'password'   => 'Anv31af7q8y6JCj'
+        ];
+        // Initialize Dragonpay
+        $dragonpay = new Dragonpay($merchant_account);
+        // Set parameters, then redirect to dragonpay
+        
+        // $dragonpay->setParameters($parameters)
+        //             //  ->withProcid(Processor::SM_PAYMENT_COUNTERS)
+        //             ->away();
+        try {
+            $dragonpay->setParameters($parameters)->away();
+        } catch(PaymentException $e){
+            echo $e->getMessage();exit;
+        } catch(\Exception $e){
+            echo $e->getMessage();
+        }
+
+    }
+
+    public function actionReturlUrl()
+    {
+        $model = \app\models\BillingList::findOne(['bs_ref_no'=>$_GET['param1']]);
+
+        return $this->redirect(['view', 'id' => $model->guid]);
     }
 
     public function actionSendEmail($blid)
@@ -100,6 +149,10 @@ class ClientBillingListController extends Controller
      */
     public function actionView($id)
     {   
+        $model = $this->findModel2($id);
+        $searchModel = new \app\models\BillingDetailsSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams, $model->id);
+
         $request = Yii::$app->request;
         if($request->isAjax){
             Yii::$app->response->format = Response::FORMAT_JSON;
@@ -113,7 +166,9 @@ class ClientBillingListController extends Controller
                 ];    
         }else{
             return $this->render('view', [
-                'model' => $this->findModel($id),
+                'model' => $model,
+                'searchModel' => $searchModel,
+                'dataProvider' => $dataProvider,
             ]);
         }
     }
@@ -329,6 +384,15 @@ class ClientBillingListController extends Controller
     protected function findModel($id)
     {
         if (($model = BillingList::findOne($id)) !== null) {
+            return $model;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+    }
+
+    protected function findModel2($id)
+    {
+        if (($model = BillingList::findOne(['guid'=>$id])) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

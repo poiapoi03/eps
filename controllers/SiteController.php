@@ -10,8 +10,6 @@ use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\ContactForm;
 use Crazymeeks\Foundation\PaymentGateway\Dragonpay;
-use Crazymeeks\Foundation\PaymentGateway\Dragonpay\Token;
-use Crazymeeks\Foundation\PaymentGateway\Options\Processor;
 
 
 use Coreproc\Dragonpay\DragonpayClient;
@@ -175,27 +173,5 @@ class SiteController extends Controller
                     ->away();
     }
 
-    public function actionTestPayTwo()
-    {
-        $credentials = [
-            'merchantId'        => 'FORTBUILDERS',
-            'merchantPassword'  => 'Anv31af7q8y6JCj',
-        ];
-        
-        $client = new DragonpayClient($credentials);
-        
-        $checkout = new Checkout($client);
-        
-        $params = [
-            'transactionId' => rand(1000,9999),
-            'amount'        => '1.00',
-            'currency'      => 'PHP',
-            'description'   => 'Playstation 4',
-            'email'         => 'john@example.com',
-        ];
-        
-        $url = $checkout->getUrl($params);
-        
-        $checkout->redirect($params);
-    }
+    
 }
